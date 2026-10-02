@@ -1,0 +1,78 @@
+@startuml diagram.puml
+
+class User {
+	id: number;
+	name: string;
+	lastName: string;
+	nickname: string;
+	mail: string; 
+	residencyCountry: Country;
+	status: Ban[] = []; 
+	learningLangs: UserLang[] = [];
+	speakingLangs: UserLang[] = [];
+	blocks: Block[] = [];
+	
+	'No puede estar aprendiendo un idioma que declara que habla.
+	'Puede estar aprendiendo como máximo 3 idiomas a la vez. Para sumar un cuarto tiene que dejar uno.
+	'Tiene que hablar al menos un idioma.
+	'Solo se aceptan idiomas del catálogo.
+}
+' ? --> estado de suspension: activo o pasivo. averiguar si se guardan mas datos.
+class Ban {
+	id: number;
+	user: User;
+	startDate: Date;
+	endDate?: Date;
+	permanent: bool;
+	
+	'Validar las condiciones logicas para el campo 'permanent' y 'endDate"
+}
+
+class Country {
+	id: number;
+	name: string;
+	region: string;
+}
+
+class CatalogLang {
+	id: string;
+	name: string;
+	
+}
+
+class UserLang {
+	id: number;
+	lang: CatalogLang;
+	user: User;
+	level: string;
+}
+
+class Preference {
+	id: number;
+	user: User;
+	peopleAllowedToStartConvos: string;
+	amountOfActiveSimultaneousConvosAllowed: number;
+	doNotDisturb: bool;
+}
+
+class Block {
+	id: number;
+	blockingUser: User;
+	blockedUser: User;
+}
+
+User --> UserLang 
+User -> Block
+User --> Preference
+User --> Country
+
+UserLang -> CatalogLang
+UserLang --> User
+
+Block -> User
+
+Preference --> User
+
+Ban --> User
+
+@endpuml
